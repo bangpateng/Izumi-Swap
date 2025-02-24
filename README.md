@@ -4,7 +4,7 @@ Izumi Swap Auto Monad
 Clone Github
 
 ```
-https://github.com/bangpateng/Izumi-Swap.git
+git clone https://github.com/bangpateng/Izumi-Swap.git
 ```
 
 ```
