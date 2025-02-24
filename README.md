@@ -5,6 +5,7 @@ Clone Github
 
 ```
 git clone https://github.com/bangpateng/Izumi-Swap.git
+cd Izumi-Swap
 ```
 
 ```
