@@ -1,39 +1,30 @@
-require('dotenv').config();
 const { ethers } = require('ethers');
 const readline = require('readline');
 const fs = require('fs');
 
-// Load RPC URL dan private keys
-const RPC_URL = process.env.RPC_URL;
-let privateKeys = process.env.PRIVATE_KEYS ? process.env.PRIVATE_KEYS.split(',') : [];
+const RPC_URL = "https://testnet-rpc.monad.xyz/";
 
-// Jika menggunakan file JSON
+let privateKeys = [];
 if (fs.existsSync('private_keys.json')) {
     const keyData = JSON.parse(fs.readFileSync('private_keys.json'));
     privateKeys = keyData.keys;
 }
 
-// Inisialisasi provider
 const provider = new ethers.JsonRpcProvider(RPC_URL);
 
-// Alamat kontrak WMON
-const WMON_CONTRACT_ADDRESS = "0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701"; 
+const WMON_CONTRACT_ADDRESS = "0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701";
 
-// ABI untuk wrap & unwrap
 const WMON_ABI = [
     "function deposit() public payable",
     "function withdraw(uint256 wad) public"
 ];
 
-// Fungsi untuk input dari terminal
+// 🔹 Fungsi untuk input dari terminal
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-/**
- * Fungsi untuk wrap MON ke WMON
- */
 async function wrapMON(wallet, amount) {
     try {
         const wmonContract = new ethers.Contract(WMON_CONTRACT_ADDRESS, WMON_ABI, wallet);
@@ -50,9 +41,6 @@ async function wrapMON(wallet, amount) {
     }
 }
 
-/**
- * Fungsi untuk unwrap WMON ke MON
- */
 async function unwrapWMON(wallet, amount) {
     try {
         const wmonContract = new ethers.Contract(WMON_CONTRACT_ADDRESS, WMON_ABI, wallet);
@@ -69,9 +57,6 @@ async function unwrapWMON(wallet, amount) {
     }
 }
 
-/**
- * Fungsi untuk looping swap pada semua wallet
- */
 async function autoSwap(repeatCount, amount) {
     for (let i = 1; i <= repeatCount; i++) {
         console.log(`\n🔄 **Loop ${i} dari ${repeatCount}** 🔄`);
@@ -89,12 +74,9 @@ async function autoSwap(repeatCount, amount) {
     console.log("\n🎉 **Semua transaksi selesai untuk semua wallet!**");
 }
 
-/**
- * Fungsi input dari user
- */
 async function main() {
     if (privateKeys.length === 0) {
-        console.log("❌ Tidak ada private key ditemukan! Pastikan Anda sudah mengisi `.env` atau `private_keys.json`.");
+        console.log("❌ Tidak ada private key ditemukan! Pastikan Anda sudah mengisi `private_keys.json`.");
         return;
     }
 
@@ -119,5 +101,4 @@ async function main() {
     });
 }
 
-// Jalankan skrip
 main();
